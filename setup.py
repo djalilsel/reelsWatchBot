@@ -7,7 +7,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '0.0.20'
+VERSION = '0.0.30'
 DESCRIPTION = 'A Python package to create a telegram bot that can download Instagram Reels from any public Instagram page.'
 LONG_DESCRIPTION = 'reelsWatchBot is a Python package that allows you to create a Telegram bot that can download Instagram Reels from any public Instagram page. The bot uses the Instapy package to download the reels from the links sent by the users. The bot can be customized to handle different types of messages and commands, and can be deployed on any platform that supports Python. The package is easy to use and can be customized to suit your needs.'
 

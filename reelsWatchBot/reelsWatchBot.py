@@ -4,11 +4,11 @@ import re
 from instapy import Instapy
 
 class ReelsWatchBot:
-    def __init__(self, telegram_bot_token, path="videos", url=r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"):
+    def __init__(self, telegram_bot_token, turnstile, path="videos", url=r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"):
         if not telegram_bot_token:
             raise ValueError("Telegram bot token is required!")
         # This is an instance of the Instapy class from the instapy package that we will use to download the reels
-        self.instapy = Instapy("")
+        self.instapy = Instapy("", turnstile=turnstile)
         # Regex pattern that we will use to match URLs in messages 
         # (Default value matches any string that starts with http:// or https://)
         self.url = url
@@ -16,6 +16,11 @@ class ReelsWatchBot:
         self.telegram_bot_token = telegram_bot_token
         # The path where the reels will be downloaded
         self.path = path
+
+        self.turnstile = turnstile
+
+        if turnstile == None:
+            raise ValueError("Turnstile token is required!")
 
     
     # Function to start the bot
@@ -25,6 +30,12 @@ class ReelsWatchBot:
     # Function to handle messages with links
     async def handle_message(self, update: Update, context):
         message_text = update.message.text
+
+        if ("set turnstile" in message_text):
+            self.turnstile = message_text.split("set turnstile")[1].strip()
+            self.instapy.set_turnstile(self.turnstile)
+            await update.message.reply_text(f"Turnstile token set to: {self.turnstile}")
+            return
 
         # Check if the message contains any URLs
         links = re.findall(self.url, message_text)
